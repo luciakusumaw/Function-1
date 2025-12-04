@@ -1,8 +1,8 @@
 import java.util.Scanner;
 
 public class WeeklyGrade13 {
-    static String[] students = {"Sari", "Rina", "Yani", "Dwi", "Lusi"};
-    static String[] weeks = {"Week 1", "Week 2", "Week 3", "Week 4", "Week 5", "Week 6", "Week 7"};
+    static String[] students;
+    static String[] weeks;
 
     static void inputGrades(int[][] grades) {
         Scanner sc = new Scanner(System.in);
@@ -13,32 +13,31 @@ public class WeeklyGrade13 {
                 grades[i][j] = sc.nextInt();
             }
         }
-        sc.close();
     }
 
     static void display(int [][] grades) {
         System.out.printf("%-10s", "Name");
         for (int i = 0; i < weeks.length; i++) {
-        System.out.printf("%-8s", weeks[i]);
+            System.out.printf("%-8s", weeks[i]);
         }
         System.out.println();
 
         for (int i = 0; i < grades.length; i++) {
-        System.out.printf("%-10s", students[i]);
-        for (int j = 0; j < grades[i].length; j++) {
-            System.out.printf("%-8d", grades[i][j]);
+            System.out.printf("%-10s", students[i]);
+            for (int j = 0; j < grades[i].length; j++) {
+                System.out.printf("%-8d", grades[i][j]);
             }
-        System.out.println();
+            System.out.println();
         }
     }
 
     static void findWeekHighest(int[][] grades) {
         int maxWeek = 0;
-        int maxTotal = 0;
+        int maxTotal = -1;
 
-        for (int w = 0; w < 7; w++) {
+        for (int w = 0; w < grades[0].length; w++) {
             int total = 0;
-            for (int s = 0; s < 5; s++) {
+            for (int s = 0; s < grades.length; s++) {
                 total += grades[s][w];
             }
             if (total > maxTotal) {
@@ -52,11 +51,11 @@ public class WeeklyGrade13 {
 
     static void findTopStudent(int[][] grades) {
         int bestStudent = 0;
-        int bestTotal = 0;
+        int bestTotal = -1;
 
-        for (int s = 0; s < 5; s++) {
+        for (int s = 0; s < grades.length; s++) {
             int total = 0;
-            for (int w = 0; w < 7; w++) {
+            for (int w = 0; w < grades[s].length; w++) {
                 total += grades[s][w];
             }
             if (total > bestTotal) {
@@ -69,23 +68,43 @@ public class WeeklyGrade13 {
         System.out.println("Total Grade: " + bestTotal);
         System.out.println("Grade per week:");
         
-        for (int w = 0; w < 7; w++) {
+        for (int w = 0; w < grades[bestStudent].length; w++) {
             System.out.println("  " + weeks[w] + ": " + grades[bestStudent][w]);
         }
     }
 
     public static void main(String[] args) {
-        int[][] grades = new int[5][7];  
+        Scanner sc = new Scanner(System.in);
+
+        System.out.print("Input number of students: ");
+        int stuCount = sc.nextInt();
+
+        System.out.print("Input number of weeks: ");
+        int weekCount = sc.nextInt();
+
+        students = new String[stuCount];
+        weeks = new String[weekCount];
+
+        sc.nextLine();
+        for (int i = 0; i < stuCount; i++) {
+            System.out.print("Input name for student " + (i + 1) + ": ");
+            students[i] = sc.nextLine();
+        }
+
+        for (int i = 0; i < weekCount; i++) {
+            weeks[i] = "Week" + (i + 1);
+        }
+
+        int[][] grades = new int[stuCount][weekCount];
 
         inputGrades(grades);
-
         System.out.println("\n=== All Students Grades ===");
         display(grades);
-
         System.out.println("\n=== Week with Highest Total Grade ===");
         findWeekHighest(grades);
-
         System.out.println("\n=== Student with Highest Total Grade ===");
         findTopStudent(grades);
+
+        sc.close();
     }
 }
